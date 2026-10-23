@@ -2,7 +2,7 @@
 
 Work in the `image-converter-agent` repository only.
 
-1. Inspect `README.md`, `pyproject.toml`, `app/`, `tests/`, `.env.example` and
+1. Inspect `README.md`, `pyproject.toml`, `src/`, `tests/`, `.env.example` and
    `.gitignore`.
 2. Confirm the service starts from its documented FastAPI entry point and that
    Python requires 3.14 or later.

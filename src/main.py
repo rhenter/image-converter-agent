@@ -6,10 +6,10 @@ from agno.os import AgentOS
 from fastapi import Depends, FastAPI, Header, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.core.settings import get_settings
-from app.db import get_session
-from app.schemas import GenerateImageRequest, GenerateImageResponse
-from app.services import generate_image
+from src.core.settings import get_settings
+from src.db import get_session
+from src.schemas import GenerateImageRequest, GenerateImageResponse
+from src.services import generate_image
 
 base_app = FastAPI(title="Image Generation Provider", version="0.1.0")
 SessionDependency = Annotated[Session, Depends(get_session)]

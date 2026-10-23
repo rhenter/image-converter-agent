@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.main import base_app
+from src.main import base_app
 
 
 def test_health() -> None:

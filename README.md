@@ -14,10 +14,9 @@ Serviço interno para transformar referências de catálogo em ilustrações pad
 
 ```bash
 cp .env.example .env
-uv run uvicorn app.main:app --reload
+uv run uvicorn src.main:app --reload
 uv run pytest
 uv run ruff check .
 ```
 
 Para produção, configure `DATABASE_URL` para PostgreSQL. O próximo passo é inserir providers reais atrás de `ImageProvider`, armazenar o arquivo retornado e derivar o thumbnail localmente.
-

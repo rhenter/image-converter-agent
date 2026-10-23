@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
-from app.core.settings import get_settings
-from app.models import ImageGenerationRequest
-from app.schemas import GenerateImageRequest, GenerateImageResponse
+from src.core.settings import get_settings
+from src.models import ImageGenerationRequest
+from src.schemas import GenerateImageRequest, GenerateImageResponse
 
 
 @dataclass(frozen=True)

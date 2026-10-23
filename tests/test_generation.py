@@ -3,9 +3,9 @@ from uuid import uuid4
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from app.db import Base
-from app.schemas import GenerateImageRequest
-from app.services import generate_image
+from src.db import Base
+from src.schemas import GenerateImageRequest
+from src.services import generate_image
 
 
 def test_generation_is_idempotent() -> None:

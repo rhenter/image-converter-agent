@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import DateTime, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db import Base
+from src.db import Base
 
 
 class ImageGenerationRequest(Base):
