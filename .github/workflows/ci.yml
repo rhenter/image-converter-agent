@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Check lockfile
+        run: uv lock --check
+
+      - name: Run tests with coverage
+        run: uv run pytest --cov=src --cov-report=json:coverage/coverage.json
+
+      - name: Prepare coverage badge data
+        run: |
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("coverage/coverage.json").read_text())
+          percentage = round(report["totals"]["percent_covered"], 2)
+          summary = {
+              "total": {
+                  metric: {"pct": percentage}
+                  for metric in ("lines", "statements", "functions", "branches")
+              }
+          }
+          Path("coverage/coverage-summary.json").write_text(
+              json.dumps(summary, indent=2) + "\n"
+          )
+          PY
+
+      - name: Check lint
+        run: uv run ruff check .
+
+      - name: Publish coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          coverage=$(node -p 't=require(`./coverage/coverage-summary.json`).total,Math.min(...`lines|statements|functions|branches`.split(`|`).map(k=>t[k].pct))')
+          color=$(COVERAGE="$coverage" node -p '+process.env.COVERAGE >= 95 ? `green` : `orange`')
+          npm install --global badgen-cli
+          mkdir -p badges
+          badgen -j coverage -s "${coverage}%" -c "$color" > badges/coverage.svg
+
+      - name: Commit coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update coverage badge [skip ci]"
+          file_pattern: badges/coverage.svg
